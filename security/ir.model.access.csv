@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_webhook_subscription_manager,webhook.subscription.manager,model_webhook_subscription,group_n8n_bridge_manager,1,1,1,1
-access_webhook_delivery_manager,webhook.delivery.manager,model_webhook_delivery,group_n8n_bridge_manager,1,1,1,1
-access_bridge_api_key_manager,bridge.api.key.manager,model_bridge_api_key,group_n8n_bridge_manager,1,1,1,1
-access_webhook_delivery_all_read,webhook.delivery.read,model_webhook_delivery,base.group_user,1,0,0,0
