@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_n8n_bridge_manager" model="res.groups">
+        <field name="name">n8n Bridge / Administrator</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <!-- Settings users administer the bridge. The implication runs this way
+         round on purpose: declaring `group_system` as *implied by* the bridge
+         group (as the 17.0 module did) grants the bridge group to nobody —
+         not even the admin — leaving the menus invisible and every outbound
+         dispatch raising AccessError. -->
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('n8n_bridge.group_n8n_bridge_manager'))]"/>
+    </record>
+
+</odoo>
