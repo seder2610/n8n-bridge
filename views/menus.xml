@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_n8n_bridge_root" name="n8n Bridge" sequence="95"
+              groups="n8n_bridge.group_n8n_bridge_manager"/>
+    <menuitem id="menu_webhook_subscription" name="Subscriptions"
+              parent="menu_n8n_bridge_root" action="action_webhook_subscription" sequence="10"/>
+    <menuitem id="menu_webhook_delivery" name="Deliveries"
+              parent="menu_n8n_bridge_root" action="action_webhook_delivery" sequence="20"/>
+    <menuitem id="menu_bridge_api_key" name="Inbound API Keys"
+              parent="menu_n8n_bridge_root" action="action_bridge_api_key" sequence="30"/>
+
+</odoo>
