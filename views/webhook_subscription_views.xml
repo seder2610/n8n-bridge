@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_webhook_subscription_form" model="ir.ui.view">
+        <field name="name">webhook.subscription.form</field>
+        <field name="model">webhook.subscription</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                        </button>
+                        <button name="action_open_deliveries" type="object"
+                                class="oe_stat_button" icon="fa-paper-plane">
+                            <field name="delivery_count" widget="statinfo" string="Deliveries"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="n8n — Purchase approvals"/></h1>
+                    </div>
+                    <group>
+                        <group string="Trigger">
+                            <field name="model_name"/>
+                            <field name="trigger"/>
+                            <field name="state_field" invisible="trigger != 'state_change'"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group string="Delivery">
+                            <field name="target_url" placeholder="https://n8n.example.com/webhook/xxxxx"/>
+                            <field name="secret" password="True"/>
+                            <field name="timeout"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_webhook_subscription_list" model="ir.ui.view">
+        <field name="name">webhook.subscription.list</field>
+        <field name="model">webhook.subscription</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="model_name"/>
+                <field name="trigger"/>
+                <field name="target_url"/>
+                <field name="delivery_count" string="Deliveries"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_webhook_subscription_search" model="ir.ui.view">
+        <field name="name">webhook.subscription.search</field>
+        <field name="model">webhook.subscription</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="target_url"/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_model" string="Watched model" context="{'group_by': 'model_name'}"/>
+                    <filter name="group_trigger" string="Trigger" context="{'group_by': 'trigger'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_webhook_subscription" model="ir.actions.act_window">
+        <field name="name">Webhook Subscriptions</field>
+        <field name="res_model">webhook.subscription</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Declare a first outbound webhook</p>
+            <p>Pick a model and a trigger, paste the URL of an n8n Webhook node and a
+               shared secret. Matching events are queued as signed deliveries and sent
+               by the retry cron.</p>
+        </field>
+    </record>
+
+</odoo>

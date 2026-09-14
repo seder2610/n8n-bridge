@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_webhook_delivery_list" model="ir.ui.view">
+        <field name="name">webhook.delivery.list</field>
+        <field name="model">webhook.delivery</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="state == 'failed'" decoration-muted="state == 'sent'" create="0">
+                <field name="create_date" string="Queued at"/>
+                <field name="subscription_id"/>
+                <field name="model_name"/>
+                <field name="res_id"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'sent'"
+                       decoration-warning="state == 'pending'"
+                       decoration-danger="state == 'failed'"/>
+                <field name="attempts"/>
+                <field name="next_attempt_at" optional="show"/>
+                <field name="sent_at" optional="hide"/>
+                <field name="last_error" optional="show"/>
+                <button name="action_retry" type="object" string="Retry"
+                        icon="fa-refresh" invisible="state == 'sent'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_webhook_delivery_form" model="ir.ui.view">
+        <field name="name">webhook.delivery.form</field>
+        <field name="model">webhook.delivery</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <header>
+                    <button name="action_retry" type="object" string="Retry now"
+                            class="btn-primary" invisible="state == 'sent'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,sent"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="subscription_id"/>
+                            <field name="model_name"/>
+                            <field name="res_id"/>
+                        </group>
+                        <group>
+                            <field name="attempts"/>
+                            <field name="next_attempt_at"/>
+                            <field name="sent_at"/>
+                        </group>
+                    </group>
+                    <group string="Signature (X-Bridge-Signature)">
+                        <field name="signature" nolabel="1"/>
+                    </group>
+                    <group string="Payload">
+                        <field name="payload" nolabel="1"/>
+                    </group>
+                    <group string="Last error" invisible="not last_error">
+                        <field name="last_error" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_webhook_delivery_search" model="ir.ui.view">
+        <field name="name">webhook.delivery.search</field>
+        <field name="model">webhook.delivery</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="subscription_id"/>
+                <field name="res_id"/>
+                <filter name="f_pending" string="Pending" domain="[('state', '=', 'pending')]"/>
+                <filter name="f_failed" string="Failed" domain="[('state', '=', 'failed')]"/>
+                <filter name="f_sent" string="Sent" domain="[('state', '=', 'sent')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_subscription" string="Subscription" context="{'group_by': 'subscription_id'}"/>
+                    <filter name="group_model" string="Watched model" context="{'group_by': 'model_name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_webhook_delivery" model="ir.actions.act_window">
+        <field name="name">Deliveries</field>
+        <field name="res_model">webhook.delivery</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_group_state': 1}</field>
+    </record>
+
+</odoo>
